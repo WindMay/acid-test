@@ -1,43 +1,50 @@
-.App {
+.app {
   text-align: center;
 }
 
-.App-logo {
+.app-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;
 }
 
-.App-header {
+.app-header {
   background-color: #222;
   padding: 20px;
   color: white;
 }
 
-.App-title {
+.app-title {
   font-size: 1.5em;
 }
 
-.App-intro {
+.app-intro {
   font-size: large;
 }
-.App-content, .App-content > * {
+.app-content, .app-content > * {
   display: flex;
 }
 
-.App-content, .App-graph-container {
+.app-content, .app-graph-container {
   justify-content: center;
   align-items: center;
 }
 
-.App-content {
+.app-content {
   flex-flow: row;
   width: 100%;
   height: 100%;
-  .App-graph-container {
+  .app-graph-container {
     width: 50%;
-    height: 300px;
+    height: auto;
     background-color: #c7c7c7;
     margin: 20px;
+    flex-flow: column;
+    .graph-title {
+      color: black;
+    }
+    .react-stockchart {
+      display: flex;
+    }
     &:first-child {
       margin-right: 0px;
     }
