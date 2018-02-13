@@ -29,6 +29,7 @@ class App extends Component {
 
 
   componentDidMount() {
+    // load initial data
     this.loadData('btc', 'daily');
     this.loadData('eth', 'daily');
   }
@@ -39,9 +40,14 @@ class App extends Component {
         <header className="App-header">
           <h1 className="App-title">BTC and ETH Fluctuations</h1>
         </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <div className="App-content">
+          <div className="App-graph-container">
+            <p>BTC chart</p>
+          </div>
+          <div className="App-graph-container">
+            <p>ETH chart</p>
+          </div>
+        </div>
       </div>
     );
   }
