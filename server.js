@@ -5,12 +5,10 @@ const bodyParser = require('body-parser');
 
 const router = require('./server/router')
 
-
-
 /**
  * Get port from environment and store in Express.
  */
-const port = process.env.PORT || '3000';
+const port = process.env.PORT || '3003';
 
 /**
  * Create HTTP server.
