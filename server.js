@@ -4,15 +4,20 @@ const bodyParser = require('body-parser');
 const rx = require('rxjs');
 
 const axios = require('axios'); // declare axios for making http requests
-const cronJob = rx.Observable.timer(1, 5000); //Updater
-const API = 'https://hn.algolia.com/api/v1';
+const cronBTC = rx.Observable.timer(1, 10000); //Updater BTC
+const cronETH = rx.Observable.timer(1, 80000); //Updater ETH
+const API = 'https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=BTC&market=USD&apikey=';
 const API_KEY = 'C3DOJ8C4CTA9Z14Q';
 const router = require('./server/router')
 
 // Once connected update articles
-const subscriber = cronJob.subscribe(value => {
-  console.log('Updating Articles...');
-  // Get latest nodejs related articles
+const subscriber = cronBTC.subscribe(value => {
+  axios.get(`${API}&apikey=${API_KEY}`).then(data => {
+      const data = articles.data;
+      console.log(data)
+  }).catch(error => {
+      console.log('Something went wrong updating the data', error);
+  });
 });
 
 /**

@@ -20,7 +20,7 @@ const send404 = function(res) {
 
 const actions = {
     'GET': (req, res) => {
-        
+
         const parsedUrl = url.parse(req.url);
         const endPoint = parsedUrl.pathname === '/' ? '/index.html' : parsedUrl.pathname;
 
