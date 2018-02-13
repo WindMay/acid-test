@@ -1,8 +1,8 @@
 const url = require('url');
 const rx = require('rxjs');
 const axios = require('axios'); // declare axios for making http requests
-const cronDaily = rx.Observable.timer(1, 1000000); //Updater BTC
-const cronMonthly = rx.Observable.timer(1, 8000000); //Updater ETH
+const cronDaily = rx.Observable.timer(1, 3600); //Updater BTC
+const cronMonthly = rx.Observable.timer(1, 86400); //Updater ETH
 const API = 'https://www.alphavantage.co/query?';
 
 const API_KEY = 'C3DOJ8C4CTA9Z14Q';
@@ -22,14 +22,12 @@ client.on("success", () => {
 const subscriberDay = cronDaily.subscribe( () => {
     axios.get(`${API}function=DIGITAL_CURRENCY_DAILY&symbol=BTC&market=USD&apikey=${API_KEY}`).then(data_BTC => {
         // console.log('BTC', data_BTC.data);
-        //client.setex('BTC_DAILY', 3600, data_BTC.data);
+        // client.setex('BTC_DAILY', 3600, JSON.stringify(data_BTC.data['Time Series (Digital Currency Daily)']));
     }).catch(error => {
         console.log('Something went wrong updating the BTC daily data', error);
     });
     axios.get(`${API}function=DIGITAL_CURRENCY_DAILY&symbol=ETH&market=USD&apikey=${API_KEY}`).then(data_ETH => {
-        // console.log('ETH', data_ETH.data['Meta Data']);
-        console.log('data', JSON.stringify(data_ETH.data['Time Series (Digital Currency Daily)']))
-        client.setex('ETH_DAILY', 3600, JSON.stringify(data_ETH.data['Time Series (Digital Currency Daily)']));
+        // client.setex('ETH_DAILY', 3600, JSON.stringify(data_ETH.data['Time Series (Digital Currency Daily)']));
     }).catch(error => {
         console.log('Something went wrong updating the ETH daily data', error);
     });
@@ -37,8 +35,8 @@ const subscriberDay = cronDaily.subscribe( () => {
 
 const subscriberMonth = cronMonthly.subscribe( () => {
     axios.get(`${API}function=DIGITAL_CURRENCY_MONTHLY&symbol=BTC&market=USD&apikey=${API_KEY}`).then(data_BTC => {
-        // console.log('BTC', data_BTC.data['Meta Data']);
-        //client.setex('BTC_MONTHLY', 86400, data_BTC.data);
+        console.log('BTC', data_BTC.data);
+        // client.setex('BTC_MONTHLY', 86400, JSON.stringify(data_BTC.data['Time Series (Digital Currency Daily)']));
     }).catch(error => {
         console.log('Something went wrong updating the BTC monthly data', error);
     });
