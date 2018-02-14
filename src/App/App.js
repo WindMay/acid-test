@@ -2,15 +2,20 @@ import React, { Component } from 'react';
 import './App.scss';
 import axios from 'axios';
 import Chart from './Chart';
+import Toggle from 'react-toggle'
+import "react-toggle/style.css"
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isBtcDaily: false,
+      isEthDaily: false,
       btc: null,
       eth: null
     }
-
+    this.handleBtcSelect = this.handleBtcSelect.bind(this);
+    this.handleEthSelect = this.handleEthSelect.bind(this);
   };
 
   loadData(currency, period) {
@@ -37,7 +42,7 @@ class App extends Component {
         let nextState = prevState;
         nextState[currency] = formattedDate;
         return nextState;
-      })
+      });
       console.log('state', this.state)
     }).catch(error => {
       console.log('Something went wrong updating the BTC daily data', error);
@@ -48,6 +53,24 @@ class App extends Component {
     // load initial data
     this.loadData('btc', 'daily');
     this.loadData('eth', 'daily');
+  }
+
+  handleBtcSelect() {
+    this.setState(prevState => {
+      let nextState = prevState;
+      nextState.isBtcDaily = !nextState.isBtcDaily;
+      return nextState;
+    });
+    console.log(this.state)
+  }
+
+  handleEthSelect() {
+    this.setState(prevState => {
+      let nextState = prevState;
+      nextState.isEthDaily = !nextState.isEthDaily;
+      return nextState;
+    });
+    console.log(this.state)
   }
 
   render() {
@@ -61,11 +84,38 @@ class App extends Component {
           </header>
           <div className="app-content">
             <div className="app-graph-container">
-              <h1 className="graph-title">BTC</h1>
+              <div className="top-container">
+                <h1 className="graph-title">BTC</h1>
+                <label>
+                  <span>Daily</span>
+                  <Toggle
+                    defaultChecked={this.state.isBtcDaily}
+                    icons={{
+                      checked: null,
+                      unchecked: null,
+                    }}
+                    onChange={this.handleBtcSelect} />
+                  <span>Monthly</span>
+                </label>
+              </div>
+
               <Chart type={'hybrid'} data={this.state.btc} width={600} pointsPerPxThreshold={4000} />
             </div>
             <div className="app-graph-container">
-              <h1 className="graph-title">ETH</h1>
+              <div className="top-container">
+                <h1 className="graph-title">ETH</h1>
+                <label>
+                  <span>Daily</span>
+                  <Toggle
+                    defaultChecked={this.state.isEthDaily}
+                    icons={{
+                      checked: null,
+                      unchecked: null,
+                    }}
+                    onChange={this.handleEthSelect} />
+                  <span>Monthly</span>
+                </label>
+              </div>
               <Chart type={'hybrid'} data={this.state.eth} width={600} />
             </div>
           </div>

@@ -39,8 +39,27 @@
     background-color: #c7c7c7;
     margin: 20px;
     flex-flow: column;
-    .graph-title {
-      color: black;
+    .top-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-flow: column;
+      margin-bottom: 15px;
+      label {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 20px;
+        .react-toggle-track {
+          background-color: #4d4d4d;
+        }
+      }
+      .react-toggle {
+        margin: 0 15px;
+      }
+      .graph-title {
+        color: black;
+      }
     }
     .react-stockchart {
       display: flex;
