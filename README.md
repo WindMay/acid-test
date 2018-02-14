@@ -1,15 +1,12 @@
 # AcidTest
 
-
-
 ## Development server
 
 1- Install redis and run on 6379 port.
 
 `redis-server --port 6379`
 
-
-2- Make sure that 3004 and 3003 ports are free Install packages and run app.
+2- Make sure that 3004 and 3003 ports are free then Install packages and run app.
 
 `npm install && npm start`
 
