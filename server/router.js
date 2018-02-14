@@ -11,39 +11,64 @@ const redis = require("redis"), client = redis.createClient({port: 6379});
 
 // Connect to the DB
 client.on("error", function (err) {
-    console.log("Error on redis connect" + err);
+  console.log("Error on redis connect" + err);
 });
 
-// Once connected update currency data
+const dailyRequests = () => {
+  axios.get(`${API}function=DIGITAL_CURRENCY_DAILY&symbol=BTC&market=USD&apikey=${API_KEY}`).then(data_BTC => {
+    console.log('BTC daily data updated');
+    client.setex('BTC_DAILY', 3600, JSON.stringify(data_BTC.data['Time Series (Digital Currency Daily)']));
+  }).catch(error => {
+    console.log('Something went wrong updating the BTC daily data', error);
+  });
+  axios.get(`${API}function=DIGITAL_CURRENCY_DAILY&symbol=ETH&market=USD&apikey=${API_KEY}`).then(data_ETH => {
+    console.log('ETH daily data updated');
+    client.setex('ETH_DAILY', 3600, JSON.stringify(data_ETH.data['Time Series (Digital Currency Daily)']));
+  }).catch(error => {
+    console.log('Something went wrong updating the ETH daily data', error);
+  });
+};
+
+const monthlyRequests = () => {
+  axios.get(`${API}function=DIGITAL_CURRENCY_MONTHLY&symbol=BTC&market=USD&apikey=${API_KEY}`).then(data_BTC => {
+    console.log('BTC Monthly data updated');
+    client.setex('BTC_MONTHLY', 86400, JSON.stringify(data_BTC.data['Time Series (Digital Currency Monthly)']));
+  }).catch(error => {
+    console.log('Something went wrong updating the BTC monthly data', error);
+  });
+  axios.get(`${API}function=DIGITAL_CURRENCY_MONTHLY&symbol=ETH&market=USD&apikey=${API_KEY}`).then(data_ETH => {
+    console.log('ETH Monthly data updated');
+    client.setex('ETH_MONTHLY', 86400, JSON.stringify(data_ETH.data['Time Series (Digital Currency Monthly)']));
+  }).catch(error => {
+    console.log('Something went wrong updating the ETH monthly data', error);
+  });
+};
+
+// Simulate Error
+const simulateError = (request) => {
+  let retry = true;
+  while(retry) {
+    if (Math.random(0, 1) < 0.1) {
+      console.log('request fail retry');
+      setTimeout(()=>{}, 3000)
+    } else {
+      request;
+      retry = false;
+    }
+  }
+};
+
+
+// Cron jobs
+const subscriberMonth = cronMonthly.subscribe( () =>{
+  simulateError(monthlyRequests());
+});
+
 const subscriberDay = cronDaily.subscribe( () => {
-    axios.get(`${API}function=DIGITAL_CURRENCY_DAILY&symbol=BTC&market=USD&apikey=${API_KEY}`).then(data_BTC => {
-        console.log('BTC daily data updated');
-        client.setex('BTC_DAILY', 3600, JSON.stringify(data_BTC.data['Time Series (Digital Currency Daily)']));
-    }).catch(error => {
-        console.log('Something went wrong updating the BTC daily data', error);
-    });
-    axios.get(`${API}function=DIGITAL_CURRENCY_DAILY&symbol=ETH&market=USD&apikey=${API_KEY}`).then(data_ETH => {
-        console.log('ETH daily data updated');
-        client.setex('ETH_DAILY', 3600, JSON.stringify(data_ETH.data['Time Series (Digital Currency Daily)']));
-    }).catch(error => {
-        console.log('Something went wrong updating the ETH daily data', error);
-    });
+  simulateError(dailyRequests());
 });
 
-const subscriberMonth = cronMonthly.subscribe( () => {
-    axios.get(`${API}function=DIGITAL_CURRENCY_MONTHLY&symbol=BTC&market=USD&apikey=${API_KEY}`).then(data_BTC => {
-        console.log('BTC Monthly data updated');
-        client.setex('BTC_MONTHLY', 86400, JSON.stringify(data_BTC.data['Time Series (Digital Currency Monthly)']));
-    }).catch(error => {
-        console.log('Something went wrong updating the BTC monthly data', error);
-    });
-    axios.get(`${API}function=DIGITAL_CURRENCY_MONTHLY&symbol=ETH&market=USD&apikey=${API_KEY}`).then(data_ETH => {
-        console.log('ETH Monthly data updated');
-        client.setex('ETH_MONTHLY', 86400, JSON.stringify(data_ETH.data['Time Series (Digital Currency Monthly)']));
-    }).catch(error => {
-        console.log('Something went wrong updating the ETH monthly data', error);
-    });
-});
+
 
 
 const headers = {
@@ -64,9 +89,10 @@ const send404 = function(res) {
     respond(res, JSON.stringify({error: 'Not Found'}), 404);
 };
 
+
+// Routes
 const actions = {
     'GET': (req, res) => {
-
         const parsedUrl = url.parse(req.url);
         const endPoint = parsedUrl.pathname === '/' ? '/index.html' : parsedUrl.pathname;
 

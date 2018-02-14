@@ -61,7 +61,11 @@ class App extends Component {
       nextState.isBtcDaily = !nextState.isBtcDaily;
       return nextState;
     });
-    console.log(this.state)
+    if (this.state.isBtcDaily) {
+      this.loadData('btc', 'daily')
+    } else {
+      this.loadData('btc', 'monthly')
+    }
   }
 
   handleEthSelect() {
@@ -71,6 +75,11 @@ class App extends Component {
       return nextState;
     });
     console.log(this.state)
+    if (this.state.isEthDaily) {
+      this.loadData('eth', 'daily')
+    } else {
+      this.loadData('eth', 'monthly')
+    }
   }
 
   render() {
