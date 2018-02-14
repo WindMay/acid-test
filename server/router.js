@@ -14,6 +14,7 @@ client.on("error", function (err) {
   console.log("Error on redis connect" + err);
 });
 
+// Define Requests to the external api
 const dailyRequests = () => {
   axios.get(`${API}function=DIGITAL_CURRENCY_DAILY&symbol=BTC&market=USD&apikey=${API_KEY}`).then(data_BTC => {
     console.log('BTC daily data updated');
@@ -68,9 +69,7 @@ const subscriberDay = cronDaily.subscribe( () => {
   simulateError(dailyRequests());
 });
 
-
-
-
+// Api helpers
 const headers = {
     "access-control-allow-origin": "*",
     "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
@@ -126,7 +125,6 @@ const actions = {
                         // invalid btc endpoint
                         send404(res)
                     }
-
                 } else if (splitEndpoint[2] === 'eth') {
                     // It's an ETH endpoint
                     if (splitEndpoint [3] === 'daily') {
